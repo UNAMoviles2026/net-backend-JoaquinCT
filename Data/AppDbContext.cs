@@ -10,4 +10,5 @@ public class AppDbContext : DbContext
     }
 
     public DbSet<Classroom> Classrooms => Set<Classroom>();
+    public DbSet<Reservation> Reservations => Set<Reservation>();
 }
