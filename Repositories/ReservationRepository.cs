@@ -27,4 +27,15 @@ public class ReservationRepository : IReservationRepository
         .Where(r => r.ClassroomId == classroomId && r.Date == date)
         .ToListAsync();
   }
+
+  public async Task<Reservation?> GetByIdAsync(Guid id)
+  {
+    return await _context.Reservations.FindAsync(id);
+  }
+
+  public async Task DeleteAsync(Reservation reservation)
+  {
+    _context.Reservations.Remove(reservation);
+    await _context.SaveChangesAsync();
+  }
 }
