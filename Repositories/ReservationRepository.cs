@@ -27,4 +27,12 @@ public class ReservationRepository : IReservationRepository
         .Where(r => r.ClassroomId == classroomId && r.Date == date)
         .ToListAsync();
   }
+
+  public async Task<List<Reservation>> GetByDateAsync(DateOnly date)
+  {
+    return await _context.Reservations
+        .AsNoTracking()
+        .Where(r => r.Date == date)
+        .ToListAsync();
+  }
 }
