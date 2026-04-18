@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using reservations_api.DTOs.Requests;
+using reservations_api.DTOs.Responses;
 using reservations_api.Services;
 
 namespace reservations_api.Controllers;
@@ -16,6 +17,9 @@ public class ReservationsController : ControllerBase
   }
 
   [HttpPost]
+  [ProducesResponseType(typeof(ReservationResponse), StatusCodes.Status201Created)]
+  [ProducesResponseType(StatusCodes.Status400BadRequest)]
+  [ProducesResponseType(StatusCodes.Status409Conflict)]
   public async Task<IActionResult> Create([FromBody] CreateReservationRequest request)
   {
     if (!ModelState.IsValid)
@@ -43,6 +47,25 @@ public class ReservationsController : ControllerBase
       }
 
       throw;
+    }
+  }
+
+  [HttpDelete("{id}")]
+  [ProducesResponseType(StatusCodes.Status204NoContent)]
+  [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+  public async Task<IActionResult> Delete(Guid id)
+  {
+    try
+    {
+      await _reservationService.DeleteAsync(id);
+      return NoContent();
+    }
+    catch (KeyNotFoundException ex)
+    {
+      return Problem(
+          detail: ex.Message,
+          statusCode: StatusCodes.Status404NotFound,
+          title: "Reservation not found");
     }
   }
 }
